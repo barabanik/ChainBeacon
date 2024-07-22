@@ -1,0 +1,109 @@
+# ChainBeacon.py
+
+import json
+from typing import List, Dict
+import random
+
+class ChainBeacon:
+    def __init__(self, network_name: str):
+        self.network_name = network_name
+        self.transactions = {}
+        self.network_stats = {
+            'total_blocks': 0,
+            'total_transactions': 0,
+            'network_health': 'Good'
+        }
+
+    def display_network_info(self):
+        """Displays network information."""
+        print(f"Network Name: {self.network_name}")
+
+    def add_transaction(self, tx_id: str, tx_data: Dict):
+        """
+        Adds a transaction to the network.
+        """
+        if tx_id in self.transactions:
+            print(f"Transaction with ID '{tx_id}' already exists.")
+            return
+        
+        self.transactions[tx_id] = tx_data
+        self.network_stats['total_transactions'] += 1
+        print(f"Transaction with ID '{tx_id}' added.")
+
+    def validate_transaction(self, tx_id: str) -> bool:
+        """
+        Validates if a transaction exists in the network.
+        """
+        if tx_id in self.transactions:
+            print(f"Transaction with ID '{tx_id}' is valid.")
+            return True
+        else:
+            print(f"Transaction with ID '{tx_id}' is invalid.")
+            return False
+
+    def update_network_stats(self):
+        """
+        Simulates network stats update.
+        """
+        self.network_stats['total_blocks'] += 1
+        # Simulate network health status changes
+        self.network_stats['network_health'] = random.choice(['Good', 'Fair', 'Poor'])
+
+    def get_network_stats(self) -> Dict:
+        """
+        Retrieves current network statistics.
+        """
+        return self.network_stats
+
+    def generate_report(self) -> Dict:
+        """
+        Generates a comprehensive report of network transactions and statistics.
+        """
+        report = {
+            'network_name': self.network_name,
+            'transactions': self.transactions,
+            'network_stats': self.network_stats
+        }
+        return report
+
+    def display_report(self, report: Dict):
+        """Displays the generated report."""
+        print("Generated Network Report:")
+        print(json.dumps(report, indent=4))
+
+# Example usage
+if __name__ == "__main__":
+    network_name = "ChainBeaconNetwork"
+    
+    # Create an instance of ChainBeacon
+    chain_beacon = ChainBeacon(network_name)
+    
+    # Display network info
+    chain_beacon.display_network_info()
+
+    # Add and validate transactions
+    chain_beacon.add_transaction("tx001", {
+        'sender': '0x1234',
+        'receiver': '0x5678',
+        'amount': 10.5,
+        'timestamp': '2024-07-21T12:00:00Z'
+    })
+    chain_beacon.add_transaction("tx002", {
+        'sender': '0x5678',
+        'receiver': '0x1234',
+        'amount': 5.0,
+        'timestamp': '2024-07-21T12:30:00Z'
+    })
+
+    # Validate transactions
+    chain_beacon.validate_transaction("tx001")
+    chain_beacon.validate_transaction("tx999")
+
+    # Update and retrieve network stats
+    chain_beacon.update_network_stats()
+    stats = chain_beacon.get_network_stats()
+    print("Network Stats:", json.dumps(stats, indent=4))
+
+    # Generate and display report
+    report = chain_beacon.generate_report()
+    chain_beacon.display_report(report)
